@@ -1,2 +1,2 @@
 # Esp32-Discord-Notifier
-created for fun notify you whenever u got any mention
+notify you whenever u get any mention
