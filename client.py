@@ -8,8 +8,8 @@ HEADER = 64
 FORMAT = 'utf-8'
 DIS_MSG = '!DIS'
 # Put esp32 ip here 
-HOST = '192.168.29.159'
-PORT = 80
+HOST = ''
+PORT = 00
 
 intents = discord.Intents.default()
 
