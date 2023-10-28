@@ -1,4 +1,4 @@
-# MUST BE RUNNED IN DISCORD.PY VERSION 1.7.3
+#DISCORD.PY VERSION 1.7.3
 import discord 
 from discord.ext import commands
 from datetime import datetime
