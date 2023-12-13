@@ -1,45 +1,53 @@
-#DISCORD.PY VERSION 1.7.3
-import discord 
+import discord
 from discord.ext import commands
 from datetime import datetime
 import socket
 
-HEADER = 64
-FORMAT = 'utf-8'
-DIS_MSG = '!DIS'
-# Put esp32 ip here 
-HOST = ''
-PORT = 00
+class MyBot(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Constants for socket communication
+        self.header_length = 64
+        self.encoding_format = 'utf-8'
+        self.command_prefix = '!DIS'
+        self.server_host = ''
+        self.server_port = 00
+        # Socket for communication with external server
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-intents = discord.Intents.default()
+    async def on_ready(self):
+        print(f'We have logged in as {self.user}')
+        server_address = (self.server_host, self.server_port)
+        self.connect_to_server(server_address)
+        print(f'Connected to {server_address}')
 
-bot = commands.Bot('!',intents=intents)
+    def send_message_to_server(self, message_data: tuple):
+        # Join and encode the message, then get the length
+        encoded_message = ' '.join(message_data).encode(self.encoding_format)
+        
+        # Send the message length and the encoded message
+        self.client_socket.send(str(len(encoded_message)).encode(self.encoding_format.ljust(self.header_length)))
+        self.client_socket.send(encoded_message)
 
-@bot.event
-async def on_ready():
-    print(f'We have logged in as {bot.user}')
-    global client
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    addr = (HOST,PORT)
-    client.connect(addr)
-    print(f'Connected to {addr}')
+    async def on_message(self, message: discord.Message):
+        if self.user.mentioned_in(message):
+            # Extract relevant user information and send to server
+            truncated_user_name = self.get_truncated_user_name(message.author.name)
+            message_data = (str(message.author.id), truncated_user_name, self.get_current_time())
+            self.send_message_to_server(message_data)
 
-def send(mesg : tuple):
-    msg = ' '.join(mesg)
-    message = msg.encode(FORMAT)
-    msg_length = len(message)
-    send_len = str(msg_length).encode(FORMAT)
-    send_len += b' '*(HEADER-len(send_len))
-    client.send(send_len)
-    client.send(message)
+    def connect_to_server(self, address: tuple):
+        # Connect to the external server
+        self.client_socket.connect(address)
 
-@bot.event
-async def on_message(message: discord.Message):
-    if bot.user.mentioned_in(message):
-        name = message.author.name
-        if len(name) > 7:
-            name = message.author.name[:7]
-        msg = (str(message.author.id),name,datetime.now().strftime("%H:%M"))
-        send(msg)
+    def get_truncated_user_name(self, name: str) -> str:
+        # Truncate user name if it's longer than 7 characters
+        return name[:7]
 
-bot.run('TOKEN',bot=False)
+    def get_current_time(self) -> str:
+        # Get the current time in HH:MM format
+        return datetime.now().strftime("%H:%M")
+
+bot = MyBot(command_prefix='!', intents=discord.Intents.default())
+bot.run('TOKEN', bot=False)
+
