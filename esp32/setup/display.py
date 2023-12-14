@@ -11,7 +11,6 @@ class Display():
         # Create an OLED display instance
         self.oled = ssd1306.SSD1306_I2C(DISPLAY_WIDTH, DISPLAY_HEIGHT, i2c_pins)
 
-    @staticmethod
     def split_string(input_text: str, breakpoint: int) -> list:
         # Split input text into words
         words = input_text.split()
