@@ -9,7 +9,6 @@ class MyBot(commands.Bot):
         # Constants for socket communication
         self.header_length = 64
         self.encoding_format = 'utf-8'
-        self.command_prefix = '!DIS'
         self.server_host = ''
         self.server_port = 00
         # Socket for communication with external server
