@@ -4,7 +4,11 @@ Script to get mentions using discord api and transfering packets locally via soc
 
 client.py  -> will be run on the computer
 
-when u
+Steps :
+1) provide the wifi credentials on the config.py file
+2) run the client.py with the token
+3) start the esp32 with the code provided 
+
 
 
 External libs:
