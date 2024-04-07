@@ -1,5 +1,4 @@
 import socket
-import _thread
 import machine
 import time
 import sys
@@ -141,9 +140,8 @@ def start_server(server_socket, oled_display, on_board_led):
     
     while True:
         client_connection, client_address = server_socket.accept()
-        _thread.start_new_thread(
-            handle_client, (client_connection, client_address, oled_display, signal_led_1, relay_pin, signal_led_2)
-        )
+        handle_client(client_connection, client_address, oled_display, signal_led_1, relay_pin, signal_led_2)
+        
 
 
 def main():
