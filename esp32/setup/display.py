@@ -3,7 +3,7 @@ import ssd1306
 from machine import SoftI2C, Pin
 import time
 
-class Display():
+class Display:
     
     def __init__(self) -> None:
         # Initialize I2C pins for the OLED display
