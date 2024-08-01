@@ -3,7 +3,7 @@ from discord.ext import commands
 from datetime import datetime
 import socket
 
-class MyBot(commands.Bot):
+class MyClient(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Constants for socket communication
@@ -47,6 +47,6 @@ class MyBot(commands.Bot):
         # Get the current time in HH:MM format
         return datetime.now().strftime("%H:%M")
 
-bot = MyBot(command_prefix='!', intents=discord.Intents.default())
-bot.run('TOKEN', bot=False)
+client = MyClient(command_prefix='!', intents=discord.Intents.default())
+client.run('TOKEN', bot=False)
 
